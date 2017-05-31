@@ -6,15 +6,10 @@ use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
-    'controllers' => [
-        'factories' => [
-            Controller\ListController::class => InvokableFactory::class,
-        ],
-    ],
 
     'router' => [
         'routes' => [
-            'album' => [
+            'blog' => [
                 'type'    => Segment::class,
                 'options' => [
                     'route' => '/blog[/:action[/:id]]',

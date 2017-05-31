@@ -7,6 +7,9 @@
 
 namespace Blog;
 
+use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 
@@ -27,5 +30,36 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface
                 )
             )
         );
+    }
+
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                Model\BlogTable::class => function($container) {
+                    $tableGateway = $container->get(Model\BlogTableGateway::class);
+                    return new Model\BlogTable($tableGateway);
+                },
+                Model\BlogTableGateway::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\Blog());
+                    return new TableGateway('album', $dbAdapter, null, $resultSetPrototype);
+                },
+            ],
+        ];
+    }
+
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                Controller\ListController::class => function($container) {
+                    return new Controller\ListController(
+                        $container->get(Model\BlogTable::class)
+                    );
+                },
+            ],
+        ];
     }
 }
