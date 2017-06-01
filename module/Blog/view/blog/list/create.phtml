@@ -1,1 +1,47 @@
-<h1>blogcreate</h1>
+<?php
+
+$title = 'Blog';
+$this->headTitle($title);
+
+?>
+
+<h1>
+    <?= $this->escapeHtml($title) ?>
+</h1>
+
+<p>
+    <a href="<?= $this->url('blog', ['action' => 'create']) ?>">
+        Add post
+    </a>
+</p>
+
+<?php
+$postTitle = $form->get('title');
+$postTitle->setAttribute('class', 'form-control');
+$postTitle->setAttribute('placeholder', 'Title');
+
+$postDesc = $form->get('description');
+$postDesc->setAttribute('class', 'form-control');
+$postDesc->setAttribute('placeholder', 'Description');
+
+$postSub = $form->get('submit');
+$postSub->setAttribute('class', 'btn btn-primary');
+
+$form->setAttribute('action', $this->url('blog', ['action' => 'create']));
+
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="form-group">
+    <?= $this->formElement($postTitle) ?>
+    <?= $this->formElementErrors()->render($postTitle, ['class' => 'help-block']) ?>
+</div>
+<div class="form-group">
+    <?= $this->formElement($postDesc) ?>
+    <?= $this->formElementErrors()->render($postDesc, ['class' => 'help-block']) ?>
+</div>
+<?php
+
+echo $this->formHidden($form->get('id'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();

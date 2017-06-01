@@ -26,7 +26,10 @@ $this->headTitle($title);
     <tr>
         <td> <?= $this->escapeHtml($blog->title) ?> </td>
         <td> <?= $this->escapeHtml($blog->description) ?> </td>
-        <td></td>
+        <td>
+            <a href="<?= $this->url('blog', ['action' => 'update', 'id' => $blog->id]) ?>">Edit</a>
+            <a href="<?= $this->url('blog', ['action' => 'delete', 'id' => $blog->id]) ?>">Delete</a>
+        </td>
     </tr>
     <?php endforeach; ?>
     </tbody>

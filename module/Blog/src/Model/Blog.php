@@ -2,6 +2,7 @@
 
 namespace Blog\Model;
 
+use Zend\Form\Exception\DomainException;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\InputFilter;
@@ -57,11 +58,13 @@ class Blog implements InputFilterAwareInterface
                 ['name' => StringTrim::class],
             ],
             'validators' => [
-                'name' => StringLength::class,
-                'options' => [
-                    'encoding' => 'UTF-8',
-                    'min' => 1,
-                    'max' => 100,
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 100,
+                    ],
                 ],
             ],
         ]);
@@ -74,16 +77,27 @@ class Blog implements InputFilterAwareInterface
                 ['name' => StringTrim::class],
             ],
             'validators' => [
-                'name' => StringLength::class,
-                'options' => [
-                    'encoding' => 'UTF-8',
-                    'min' => 1,
-                    'max' => 100,
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 100,
+                    ],
                 ],
             ],
         ]);
 
         $this->inputFilter = $inputFilter;
         return $this->inputFilter;
+    }
+
+    public function getArrayCopy()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description
+        ];
     }
 }

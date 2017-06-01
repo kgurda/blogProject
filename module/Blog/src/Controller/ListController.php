@@ -52,7 +52,41 @@ class ListController extends AbstractActionController {
 
     public function updateAction()
     {
-        return new ViewModel();
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        if(0 === $id) {
+            return $this->redirect()->toRoute('blog', ['action' => 'create']);
+        }
+
+        try {
+            $blog = $this->table->getBlog($id);
+        } catch (\Exception $e) {
+            return $this->redirect()->toRoute('blog', ['action' => 'index']);
+        }
+
+        $form = new BlogForm();
+        $form->bind($blog);
+        $form->get('submit')->setAttribute('value', 'Update');
+
+        $request = $this->getRequest();
+
+        $viewData = ['id' => $id, 'form' => $form];
+
+        if (! $request->isPost()) {
+            return $viewData;
+        }
+
+        $form->setInputFilter($blog->getInputFilter());
+        $form->setData($request->getPost());
+
+        if(!$form->isValid()) {
+            return $viewData;
+        }
+
+        $this->table->saveBlog($blog);
+
+        return $this->redirect()->toRoute('blog', ['action' => 'index']);
+
     }
 
     public function deleteAction()
